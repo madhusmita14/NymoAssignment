@@ -127,8 +127,24 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 0) {
             Bitmap bitmapCamera=(Bitmap)data.getExtras().get("data");//fetch intent data in bitmap format
             image_placeHolder.setImageBitmap(bitmapCamera);//attach image with imageview
+     
+            //Require permission to write external storage
+            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M)
+            {
+                if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_DENIED)
+                {
+                    String[] permission={Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                    requestPermissions(permission,EXTERNAL_STORAGE_CODE);
+                }
+                else
+                {
+                    dataSaveToMemory();;
+                }
+            }
+            else
+            {
 
-            dataSaveToMemory();//Save the data in internalstorage
+            }
         }
         else if(requestCode==1 && data!=null)
         {
@@ -148,6 +164,24 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+    
+     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode)
+        {
+            case EXTERNAL_STORAGE_CODE:
+                if(grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED)
+                {
+                    dataSaveToMemory();
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),"permission denied",Toast.LENGTH_SHORT).show();
+                }
+        }
+    }
+
     public static boolean DeletePreviousFile(File dir) {
         if (dir.exists()) {
             File[] fileList = dir.listFiles();
