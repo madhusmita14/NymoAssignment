@@ -100,15 +100,14 @@ public class MainActivity extends AppCompatActivity {
         File sdCard = Environment.getExternalStorageDirectory();
 
         dir = new File(sdCard.getAbsolutePath() + "/Nymo");//saveimage folder
-        //Toast.makeText(getApplicationContext(), "" + dir, Toast.LENGTH_SHORT).show();
-
+    
         DeletePreviousFile(dir);
         dir.mkdirs();
 
         fileName = String.format("%d.jpg", System.currentTimeMillis());
 
         dataPath= new File(dir, fileName);//saveimage/pic.jpg
-        Toast.makeText(getApplicationContext(), "" +dataPath, Toast.LENGTH_SHORT).show();
+     
         path=dataPath.toString();
         path_text.setText(path);
 
