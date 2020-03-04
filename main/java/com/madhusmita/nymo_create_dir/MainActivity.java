@@ -93,29 +93,29 @@ public class MainActivity extends AppCompatActivity {
 
     private void dataSaveToMemory() {
 
-        BitmapDrawable draw = (BitmapDrawable)image_placeHolder.getDrawable();
-        Bitmap bitmap = draw.getBitmap();
+        BitmapDrawable bitmapDrawable=(BitmapDrawable)image_placeHolder.getDrawable();
+        Bitmap bitmap=bitmapDrawable.getBitmap();
 
-        FileOutputStream outStream = null;
-        File sdCard = Environment.getExternalStorageDirectory();
+        FileOutputStream out=null;
+        File internal_storage=Environment.getExternalStorageDirectory();//fetch the root directory
 
-        dir = new File(sdCard.getAbsolutePath() + "/Nymo");//saveimage folder
-    
-        DeletePreviousFile(dir);
+        dir=new File(internal_storage.getAbsolutePath()+"/Nymo");//set own directory
+        
+        DeletePreviousFile(dir);//clear directory before entering new data
         dir.mkdirs();
 
-        fileName = String.format("%d.jpg", System.currentTimeMillis());
+        fileName=String.format("%d.jpg",System.currentTimeMillis());//set the file name with extension
 
-        dataPath= new File(dir, fileName);//saveimage/pic.jpg
-     
+        dataPath=new File(dir,fileName);//fetch the path of data ehere it is stored
+        
         path=dataPath.toString();
         path_text.setText(path);
 
         try {
-            outStream = new FileOutputStream(dataPath);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100,outStream);
-            outStream.flush();
-            outStream.close();
+            out= new FileOutputStream(dataPath);
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,out);
+            out.flush();
+            out.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -125,27 +125,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0) {
-            Bitmap bitmapCamera = (Bitmap) data.getExtras().get("data");
-            image_placeHolder.setImageBitmap(bitmapCamera);
+         if (requestCode == 0) {
+            Bitmap bitmapCamera=(Bitmap)data.getExtras().get("data");//fetch intent data in bitmap format
+            image_placeHolder.setImageBitmap(bitmapCamera);//attach image with imageview
 
-            dataSaveToMemory();;
+            dataSaveToMemory();//Save the data in internalstorage
         }
         else if(requestCode==1 && data!=null)
         {
-            imageUri = data.getData();
+            imageUri=data.getData();//get data from storage in uri
             try {
                 Bitmap BitmapGallery = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                image_placeHolder.setImageBitmap(BitmapGallery);
+                image_placeHolder.setImageBitmap(BitmapGallery);//set image in imageview
 
-                String galleryPath = imageUri.getPath().toString();
-                path_text.setText(galleryPath);
+                String galleryPath = imageUri.getPath().toString();//parse the usri to string
+                path_text.setText(galleryPath);//set path in textview
 
             }
             catch (IOException e)
             {
                 e.printStackTrace();
             }
+
+
 
         }
     }
