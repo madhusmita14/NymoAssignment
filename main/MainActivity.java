@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public String path;
     String fileName;
 
+     CoordinatorLayout coordinatorLayout;
     private static final int EXTERNAL_STORAGE_CODE=1;
 
     @Override
@@ -63,6 +64,17 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Click on image");
 
+        coordinatorLayout=findViewById(R.id.cord_layout_id);
+        coordinatorLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(behavior.getState()== STATE_EXPANDED)
+                {
+                    behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+            }
+        });
+        
         bottom_sheet_cardView=findViewById(R.id.cardView);
         bottom_sheet_cardView.setCardBackgroundColor(Color.WHITE);
 
@@ -83,7 +95,14 @@ public class MainActivity extends AppCompatActivity {
         switch (v.getId())
         {
             case R.id.img:
-                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                if(behavior.getState()== STATE_EXPANDED)
+                {
+                    behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+                else
+                {
+                     behavior.setState(STATE_EXPANDED);
+                }
                 break;
             case R.id.imageCamera:
                 //open camera and capture image
